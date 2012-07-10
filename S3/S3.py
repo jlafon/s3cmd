@@ -157,12 +157,13 @@ class S3(object):
 
     def get_connection(self, bucket):
         if self.config.proxy_host != "":
-            return httplib.HTTPConnection(self.config.proxy_host, self.config.proxy_port)
+            return httplib.HTTPConnection(self.config.proxy_host, self.config.proxy_port,
+                timeout=self.config.http_request_timeout)
         else:
             if self.config.use_https:
-                return httplib.HTTPSConnection(self.get_hostname(bucket))
+                return httplib.HTTPSConnection(self.get_hostname(bucket),timeout=self.config.http_request_timeout)
             else:
-                return httplib.HTTPConnection(self.get_hostname(bucket))
+                return httplib.HTTPConnection(self.get_hostname(bucket),timeout=self.config.http_request_timeout)
 
     def get_hostname(self, bucket):
         if bucket and check_bucket_name_dns_conformity(bucket):
